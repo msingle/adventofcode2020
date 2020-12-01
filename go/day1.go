@@ -64,7 +64,7 @@ func run(w io.Writer, args []string) error {
 	// if len(args) != 0 {
 	// 	return errors.New("filename is hardcoded")
 	// }
-	file, err := os.Open("./day1/input.txt")
+	file, err := os.Open("../day1/input.txt")
 	if err != nil {
 		return err
 	}
