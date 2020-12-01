@@ -35,6 +35,31 @@ func getTwo(nums []int) (int, int) {
 	return 0, 0
 }
 
+func getThree(nums []int) (int, int, int) {
+
+	// sort.Ints(nums)
+	// x+ y == 2020
+	fmt.Println("checking: ")
+	for i, x := range nums {
+		fmt.Printf("%d\n", x)
+		for j := i; j < len(nums); j++ {
+			y := nums[j]
+			fmt.Printf("\t%d\n", y)
+
+			for k := j; k < len(nums); k++ {
+				z := nums[k]
+				if x+y+z == 2020 {
+					return x, y, z
+				}
+			}
+			// if x+y == 2020 {
+			// 	return x, y
+			// }
+		}
+	}
+	return 0, 0, 0
+}
+
 func run(w io.Writer, args []string) error {
 	// if len(args) != 0 {
 	// 	return errors.New("filename is hardcoded")
@@ -57,12 +82,20 @@ func run(w io.Writer, args []string) error {
 		nums = append(nums, num)
 	}
 
-	x, y := getTwo(nums)
+	// x, y := getTwo(nums)
+	// fmt.Printf("x = %d\n", x)
+	// fmt.Printf("y = %d\n", y)
+
+	// result := x * y
+	// fmt.Printf("x*y = %d\n", result)
+
+	x, y, z := getThree(nums)
 	fmt.Printf("x = %d\n", x)
 	fmt.Printf("y = %d\n", y)
+	fmt.Printf("z = %d\n", z)
 
-	result := x * y
-	fmt.Printf("x*y = %d\n", result)
+	result := x * y * z
+	fmt.Printf("x*y*z= %d\n", result)
 
 	if err := scanner.Err(); err != nil {
 		return err
