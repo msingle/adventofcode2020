@@ -15,9 +15,16 @@ func main() {
 	}
 }
 
+type slope struct {
+	nextx int
+	nexty int
+}
+
 type Point struct {
-	x int
-	y int
+	x     int
+	y     int
+	slope slope
+	trees int
 }
 
 var (
@@ -26,8 +33,9 @@ var (
 
 func (p *Point) NextMove() {
 	// right 3, down 1
-	p.x = (p.x + 3) % width
-	p.y = p.y + 1
+	p.x = (p.x + p.slope.nextx) % width
+	p.y = p.y + p.slope.nexty
+	// fmt.Printf("\tNextMove: %v\n", p)
 }
 
 func run(w io.Writer, args []string) error {
@@ -41,22 +49,41 @@ func run(w io.Writer, args []string) error {
 	defer file.Close()
 
 	lineNo := 0
-	pos := Point{x: 0, y: lineNo}
-
-	trees := 0
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		lineNo++
-		plots := []rune(scanner.Text())
-		width = len(plots)
-		if plots[pos.x] == '#' {
-			trees++
-		}
-		// get ready for next
-		pos.NextMove()
+	routes := []*Point{
+		&Point{x: 0, y: lineNo, slope: slope{nextx: 1, nexty: 1}},
+		&Point{x: 0, y: lineNo, slope: slope{nextx: 3, nexty: 1}},
+		&Point{x: 0, y: lineNo, slope: slope{nextx: 5, nexty: 1}},
+		&Point{x: 0, y: lineNo, slope: slope{nextx: 7, nexty: 1}},
+		&Point{x: 0, y: lineNo, slope: slope{nextx: 1, nexty: 2}},
 	}
 
-	fmt.Printf("trees: %d\n", trees)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+
+		plots := []rune(scanner.Text())
+		width = len(plots)
+		for _, p := range routes {
+			pos := p
+			fmt.Printf("pos: %v\n", pos)
+			if pos.y != lineNo {
+				continue
+			}
+			if plots[pos.x] == '#' {
+				pos.trees++
+
+			}
+			// get ready for next
+			pos.NextMove()
+		}
+		lineNo++
+	}
+
+	result := 1
+	for i, pos := range routes {
+		fmt.Printf("route[%d]: trees = %d\n", i, pos)
+		result = result * pos.trees
+	}
+	fmt.Printf("trees: %d\n", result)
 	if err := scanner.Err(); err != nil {
 		return err
 	}
