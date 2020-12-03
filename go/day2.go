@@ -36,8 +36,8 @@ func run(w io.Writer, args []string) error {
 		lower, _ := strconv.Atoi(lh[0])
 		higher, _ := strconv.Atoi(lh[1])
 		target := strings.Trim(chunks[1], ":")
-		cnt := strings.Count(chunks[2], target)
-		if lower <= cnt && cnt <= higher {
+		letters := []rune(chunks[2])
+		if (string(letters[lower-1]) == target) != (string(letters[higher-1]) == target) {
 			fmt.Printf("%s\n", line)
 			oks++
 		}
